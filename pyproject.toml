@@ -1,0 +1,84 @@
+[tool.poetry]
+name = "OKX Charts on Streamlit"
+version = "0.1.0"
+readme = "README.md"
+package-mode = false
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "2.32.2"
+ruff = "0.9.2"
+python-dotenv = "1.0.1"
+streamlit = "1.41.1"
+pandas = "2.2.3"
+plotly = "5.24.1"
+boto3 = "1.36.6"
+
+
+[tool.ruff]
+fix = true
+line-length = 105
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["I"]
+fixable = ["I"]
+extend-select = [
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "ERA", # flake8-eradicate/eradicate
+    "I",   # isort
+    "N",   # pep8-naming
+    "PIE", # flake8-pie
+    "PGH", # pygrep
+    "RUF", # ruff checks
+    "SIM", # flake8-simplify
+    "T20", # flake8-print
+    "TCH", # flake8-type-checking
+    "TID", # flake8-tidy-imports
+    "UP",  # pyupgrade
+]
+ignore = [
+    "B904", # use 'raise ... from err'
+    "B905", # use explicit 'strict=' parameter with 'zip()'
+    "T201", # print
+    "ERA001", # commented-out code
+]
+extend-safe-fixes = [
+    "TCH", # move import from and to TYPE_CHECKING blocks
+]
+unfixable = [
+    "ERA", # do not autoremove commented out code
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+
+
+[poetry.group.dev.dependencies]
+pytest = "^7.0"
+black = "^22.1.0"
+
+[tool.poetry.group.typing.dependencies]
+mypy = ">=1.8.0"
+types-requests = ">=2.28.8"
+
+[tool.mypy]
+files = "core, exchanges, tests"
+mypy_path = "core"
+namespace_packages = true
+explicit_package_bases = true
+strict = true
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool",
+]
+exclude = ["tests"]
+ignore_missing_imports = true
