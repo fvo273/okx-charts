@@ -11,7 +11,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-S3_CACHE_TTL = 300  # seconds
+S3_CACHE_TTL = 5  # seconds
 load_dotenv()
 
 
@@ -26,7 +26,7 @@ class DataLoadError(Exception):
 
 
 @st.cache_data(ttl=S3_CACHE_TTL)
-def load_data_from_s3(bucket_name: str, file_name: str) -> pd.DataFrame:
+def load_data_from_s3(bucket_name: str, file_name: str) -> tuple[pd.DataFrame, str]:
     s3 = boto3.client(
         "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -37,9 +37,18 @@ def load_data_from_s3(bucket_name: str, file_name: str) -> pd.DataFrame:
     try:
         response = s3.get_object(Bucket=bucket_name, Key=file_name)
         csv_data = response["Body"].read().decode("utf-8")
-        df = pd.read_csv(StringIO(csv_data))
-        df[c.DATE] = pd.to_datetime(df[c.DATE])
-        return df
+        last_modified = response['LastModified']
+        df = pd.read_csv(
+            StringIO(csv_data),
+            dtype={c.TRADER_PNL: float, c.CLIENT_PNL: float, c.AVAILABLE_BALANCE: float},
+        )
+
+        _prepare_dataframe(df)
+        return df, last_modified
     except Exception:
         sys.tracebacklimit = 0
         raise DataLoadError("Error loading data from S3")
+
+
+def _prepare_dataframe(df: pd.DataFrame) -> None:
+    df[c.DATE] = pd.to_datetime(df[c.DATE], format="ISO8601")
