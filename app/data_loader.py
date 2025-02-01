@@ -11,7 +11,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 
-S3_CACHE_TTL = 5  # seconds
+S3_CACHE_TTL = 300  # seconds
 load_dotenv()
 
 

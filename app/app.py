@@ -18,6 +18,9 @@ CHART_HEADER = os.getenv("CHART_HEADER", "Statement")
 
 USE_DATE_FILTER = os.getenv("USE_DATE_FILTER", "False").lower() == "true"
 
+st.set_page_config(layout="wide")
+
+
 st.write(f"### {CHART_HEADER}")
 
 df, last_modified = load_data_from_s3(BUCKET_NAME, S3_FILE_NAME)
