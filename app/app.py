@@ -18,6 +18,16 @@ CHART_HEADER = os.getenv("CHART_HEADER", "Statement")
 
 USE_DATE_FILTER = os.getenv("USE_DATE_FILTER", "False").lower() == "true"
 
+RED_CELL_STYLE = (
+    '<div style="background-color:#f0bbbe; padding:12px; border-radius:5px; border: 1px solid black;">'
+)
+GREEN_CELL_STYLE = (
+    '<div style="background-color:#c5edc8; padding:12px; border-radius:5px; border: 1px solid black;">'
+)
+YELLOW_CELL_STYLE = (
+    '<div style="background-color:#ede7c5; padding:12px; border-radius:5px; border: 1px solid black;">'
+)
+
 st.set_page_config(layout="wide")
 
 
@@ -57,8 +67,28 @@ else:
     pnl_fig = plot_pnl(filtered_df, show_pnl, show_clean_pnl, show_balance_change)
     st.plotly_chart(pnl_fig)
 
-    if len(str(last_modified)) >= 19: # ISO format date time
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(
+            f"{RED_CELL_STYLE}Trader PnL: <b>{str(round(df[c.TRADER_PNL].iloc[-1] * 100, 2))}%</b> </div>",
+            unsafe_allow_html=True,
+        )
+    with col2:
+        st.markdown(
+            f"{GREEN_CELL_STYLE}Client PnL: <b>{str(round(df[c.CLIENT_PNL].iloc[-1] * 100, 2))}%</b> </div>",
+            unsafe_allow_html=True,
+        )
+    with col3:
+        st.markdown(
+            f"{YELLOW_CELL_STYLE}Av. Balance: <b>{str(round(df[c.AVAILABLE_BALANCE].iloc[-1] * 100, 2))}%</b> </div>",
+            unsafe_allow_html=True,
+        )
+    st.write("")
+
+    if len(str(last_modified)) >= 19:  # ISO format date time
         st.info(f"Last data retrieval: {str(last_modified)[:19]} (UTC)")
+
+    df = df.sort_values(by=[c.DATE], ascending=False)
 
     st.write("### Raw Data")
     st.dataframe(df, use_container_width=True, hide_index=True)

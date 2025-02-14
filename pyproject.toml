@@ -44,6 +44,7 @@ ignore = [
     "B905", # use explicit 'strict=' parameter with 'zip()'
     "T201", # print
     "ERA001", # commented-out code
+    "RUF010", # f strings format
 ]
 extend-safe-fixes = [
     "TCH", # move import from and to TYPE_CHECKING blocks

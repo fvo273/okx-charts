@@ -37,7 +37,7 @@ def load_data_from_s3(bucket_name: str, file_name: str) -> tuple[pd.DataFrame, s
     try:
         response = s3.get_object(Bucket=bucket_name, Key=file_name)
         csv_data = response["Body"].read().decode("utf-8")
-        last_modified = response['LastModified']
+        last_modified = response["LastModified"]
         df = pd.read_csv(
             StringIO(csv_data),
             dtype={c.TRADER_PNL: float, c.CLIENT_PNL: float, c.AVAILABLE_BALANCE: float},
