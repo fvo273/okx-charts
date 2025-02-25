@@ -19,6 +19,8 @@ S3_FILE_NAME = os.getenv("AWS_S3_FILE_NAME", "")
 CHART_HEADER = os.getenv("CHART_HEADER", "Statement")
 USE_DATE_FILTER = os.getenv("USE_DATE_FILTER", "False").lower() == "true"
 
+APP_VERSION = "0.1.25"
+
 st.set_page_config(layout="wide")
 
 
@@ -77,7 +79,10 @@ def okx_dashboard():
             )
 
         st.write("")
-        st.markdown("<div> * Starting on February 18, the profit distribution will be 100% for the client and 0% for the trader.</div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div> * Starting on February 18, the profit distribution will be 100% for the client and 0% for the trader.</div>",
+            unsafe_allow_html=True,
+        )
         st.write("")
 
         if len(str(last_modified)) >= 19:  # ISO format date time
@@ -110,3 +115,8 @@ elif selected_dashboard == Exchanges.BINGX:
     bingx_dashboard()
 elif selected_dashboard == Exchanges.BITGET:
     bitget_dashboard()
+
+for _ in range(10):
+    st.sidebar.write(" ")
+
+st.sidebar.markdown(f'<div style="color:#d9d9d9">v. {APP_VERSION}</div>', unsafe_allow_html=True)
